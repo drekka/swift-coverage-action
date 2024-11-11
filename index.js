@@ -1,15 +1,18 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const glob = require('@actions/glob');
 
 try {
-  //const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello World!`);
-  
-  // Record the time of greeting as an output
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
+
+    core.summary.addHeading('Code coverage', '1')
+    core.summary.addRaw('Code coverage results', true)
+
+    const globber = await glob.create('**/*.json')
+    for await (const file of globber.globGenerator()) {
+        console.log('JSON file found: ' + file)
+    }
 
 } catch (error) {
-  // Handle errors and indicate failure
-  core.setFailed(error.message);
+    // Handle errors and indicate failure
+    core.setFailed(error.message);
 }
