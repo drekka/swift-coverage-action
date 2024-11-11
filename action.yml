@@ -1,0 +1,5 @@
+name: 'Swift coverage report'
+description: 'Gathers coverage data from a swift build and pubishes a report.'
+runs:
+  using: 'node20'
+  main: 'index.js'
