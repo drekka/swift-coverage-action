@@ -9,7 +9,7 @@ async function generateReport() {
 
         const globber = await glob.create('**/*.json', {followSymbolicLinks: false})
         const files = await globber.glob()
-        for (const file of file) {
+        for (const file of files) {
             console.log('JSON file found: ' + file)
         }
 
