@@ -1,6 +1,5 @@
 const core = require('@actions/core')
-const github = require('@actions/github')
-const glob = require('@actions/glob')
+const { glob } = require('@actions/glob')
 
 try {
 
@@ -8,9 +7,7 @@ try {
     core.summary.addRaw('Code coverage results', true)
 
     const globber = glob.create('**/*.json')
-    const files = globber.glob()
-//    const globber = glob.create('**/*.json')
-    for (const file of files) {
+    for (const file of globber.glob()) {
         console.log('JSON file found: ' + file)
     }
 
