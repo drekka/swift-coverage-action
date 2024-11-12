@@ -7,7 +7,7 @@ try {
     core.summary.addRaw('Code coverage results', true)
 
     const globber = glob.create('**/*.json', {followSymbolicLinks: false})
-    for (const file of globber.glob()) {
+    for await (const file of globber.glob()) {
         console.log('JSON file found: ' + file)
     }
 
