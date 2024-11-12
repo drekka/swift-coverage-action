@@ -1,5 +1,5 @@
 const core = require('@actions/core')
-const { glob } = require('@actions/glob')
+const glob = require('@actions/glob')
 
 try {
 
