@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const glob = require('@actions/glob')
 
-function generateReport() {
+async function generateReport() {
     try {
 
         core.summary.addHeading('Code coverage', '1')
@@ -18,4 +18,4 @@ function generateReport() {
     }
 }
 
-await generateReport()
+generateReport()
