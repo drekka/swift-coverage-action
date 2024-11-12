@@ -8,7 +8,8 @@ async function generateReport() {
         core.summary.addRaw('Code coverage results', true)
 
         const globber = await glob.create('**/*.json', {followSymbolicLinks: false})
-        for (const file of globber.glob()) {
+        const files = await globber.glob()
+        for (const file of file) {
             console.log('JSON file found: ' + file)
         }
 
