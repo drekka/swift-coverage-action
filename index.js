@@ -4,14 +4,17 @@ const glob = require('@actions/glob')
 async function generateReport() {
     try {
 
-        core.summary.addHeading('Code coverage', '1')
-        core.summary.addRaw('Code coverage results', true)
+        const coverageFileFilter = core.getInput('filter')
 
-        const globber = await glob.create('**/*.json', {followSymbolicLinks: false})
+        const globber = await glob.create(coverageFileFilter, {followSymbolicLinks: false})
         const files = await globber.glob()
         for (const file of files) {
             console.log('JSON file found: ' + file)
         }
+
+        core.summary.addHeading('Code coverage', '1')
+        core.summary.addRaw('Code coverage results', true)
+        core.summary.write()
 
     } catch (error) {
         // Handle errors and indicate failure

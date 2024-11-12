@@ -1,5 +1,10 @@
 name: 'Swift coverage report'
 description: 'Gathers coverage data from a swift build and pubishes a report.'
+inputs:
+  filter:
+    description: 'Glob based file filter to locate coverage files.'
+    required: false
+    default: '.build/**/codecov/*.json'
 runs:
   using: 'node20'
   main: 'index.js'
