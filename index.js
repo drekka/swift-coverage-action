@@ -4,7 +4,7 @@ const glob = require('@actions/glob')
 const fs = require("node:fs")
 const path = require('node:path');
 
-const minimatch = require("minimatch")
+const Minimatch = require('minimatch').Minimatch
 
 async function generateReport() {
     try {
@@ -15,37 +15,15 @@ async function generateReport() {
 
         console.log('Loading coverage from: ' + coverageFilter)
 
-        const includes = core.getInput('includes').split(',').map(glob => path.join(buildDir, glob.trim()))
-        for (const glob of includes) {
-            console.log('Including: ' + glob)
-        }
-        const excludes = core.getInput('excludes').split(',').map(glob => path.join(buildDir, glob.trim()))
-        for (const glob of includes) {
-            console.log('Excluding: ' + glob)
-        }
+        const includes = buildFilterGlobs('includes')
+        for (const glob of includes) { console.log('Including: ' + glob) }
+        const excludes = buildFilterGlobs('excludes')
+        for (const glob of excludes) { console.log('Excluding: ' + glob) }
 
         const globber = await glob.create(coverageFilter, {followSymbolicLinks: false})
         const coverageFiles = await globber.glob()
         for (const coverageFile of coverageFiles) {
-            console.log('JSON file found: ' + coverageFile)
-            fs.readFile(coverageFile, function(err, rawData) {
-
-                if (err) throw err;
-
-                const coverage = JSON.parse(rawData);
-
-                console.log('Data count: ' + coverage.data.length)
-                console.log('Lines  : ' + coverage.data[0].totals.lines.count)
-                console.log('Covered: ' + coverage.data[0].totals.lines.covered)
-                console.log('%      : ' + coverage.data[0].totals.lines.percent)
-
-                const projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
-
-                for (const file of projectFiles) {
-                    console.log('File: ' + file.filename)
-                }
-
-            });
+            processCoverage(coverageFile, includes, excludes)
         }
 
         core.summary.addHeading('Code coverage', '1')
@@ -56,6 +34,41 @@ async function generateReport() {
         // Handle errors and indicate failure
         core.setFailed(error.message);
     }
+}
+
+function buildFilterGlobs(input) {
+    return core.getInput(input).split(',').map(glob => path.join(buildDir, glob.trim()))
+}
+
+function processCoverage(file, includes, excludes) {
+    console.log('Reading coverage file: ' + file)
+    fs.readFile(file, (err, rawData) => {
+
+        if (err) throw err;
+
+        const coverage = JSON.parse(rawData);
+
+        console.log('Data count: ' + coverage.data.length)
+        console.log('Lines  : ' + coverage.data[0].totals.lines.count)
+        console.log('Covered: ' + coverage.data[0].totals.lines.covered)
+        console.log('%      : ' + coverage.data[0].totals.lines.percent)
+
+        var projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
+
+        for glob in includes) {
+            var mm = new Minimatch(glob, {})
+            projectFiles = projectFiles.filter(file => mm.match(file))
+        }
+
+        for glob in excludes) {
+
+        }
+
+        for (const file of projectFiles) {
+            console.log('File: ' + file.filename)
+        }
+
+    });
 }
 
 generateReport()
