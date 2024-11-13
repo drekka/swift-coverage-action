@@ -15,10 +15,8 @@ async function generateReport() {
 
         console.log('Loading coverage from: ' + coverageFilter)
 
-        const includes = buildFilterGlobs('includes')
-        for (const glob of includes) { console.log('Including: ' + glob) }
-        const excludes = buildFilterGlobs('excludes')
-        for (const glob of excludes) { console.log('Excluding: ' + glob) }
+        const includes = buildFilterGlobs('Including', 'includes', buildDir)
+        const excludes = buildFilterGlobs('Excluding', 'excludes', buildDir)
 
         const globber = await glob.create(coverageFilter, {followSymbolicLinks: false})
         const coverageFiles = await globber.glob()
@@ -36,8 +34,13 @@ async function generateReport() {
     }
 }
 
-function buildFilterGlobs(input, buildDir) {
-    return core.getInput(input).split(',').map(glob => path.join(buildDir, glob.trim()))
+// Reads a filter from the input arguments and generates a list of globs.
+function buildFilterGlobs(logTitle, input, buildDir) {
+    return core.getInput(input).split(',').map(glob => {
+        const glob = path.join(buildDir, glob.trim())
+        console.log(logTitle + ': ' + glob)
+        return glob
+    })
 }
 
 // Processes a single coverage file.
@@ -61,8 +64,7 @@ function processCoverage(file, includes, excludes, buildDir) {
         var projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
 
         // Include only the files we want.
-        const matchers = includes.map(glob => new Minimatch(glob, {}))
-        projectFiles = projectFiles.filter(file => matchers.some(matcher => matcher.matches(file)))
+        projectFiles = matchFilters(projectFiles, includes)
 
         // Filter out any excludes.
         for (const glob in excludes) {
@@ -75,6 +77,11 @@ function processCoverage(file, includes, excludes, buildDir) {
         }
 
     });
+}
+
+func matchFilters(files, globs) {
+    const matchers = globs.map(glob => new Minimatch(glob, {}))
+    return files.filter(file => matchers.some(matcher => matcher.matches(file)))}
 }
 
 generateReport()
