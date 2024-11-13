@@ -14,9 +14,10 @@ async function generateReport() {
             fs.readFile(file, function(err, data) {
                 if (err) throw err;
                 const coverage = JSON.parse(data);
-                console.log('Data count: ' + coverage.data.count)
-                console.log('Summary: ' + coverage.data[0].summary)
-                console.log('Line: ' + coverage.data[0].summary.lineCoverage)
+                console.log('Data count: ' + coverage.data.length)
+                console.log('Lines  : ' + coverage.data[0].totals.lines.count)
+                console.log('Covered: ' + coverage.data[0].totals.lines.covered)
+                console.log('%      : ' + coverage.data[0].totals.lines.percent)
             });
         }
 
