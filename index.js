@@ -64,7 +64,7 @@ function processCoverage(file, includes, excludes, buildDir) {
         var projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
 
         // Include only the files we want.
-        if (includes.length) > 0 {
+        if (includes.length > 0) {
             projectFiles = micromatch(projectFiles, includes)
         }
 
