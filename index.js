@@ -23,7 +23,7 @@ async function generateReport() {
         const globber = await glob.create(coverageFilter, {followSymbolicLinks: false})
         const coverageFiles = await globber.glob()
         for (const coverageFile of coverageFiles) {
-            processCoverage(coverageFile, includes, excludes)
+            processCoverage(coverageFile, includes, excludes, buildDir)
         }
 
         core.summary.addHeading('Code coverage', '1')
@@ -40,7 +40,7 @@ function buildFilterGlobs(input) {
     return core.getInput(input).split(',').map(glob => path.join(buildDir, glob.trim()))
 }
 
-function processCoverage(file, includes, excludes) {
+function processCoverage(file, includes, excludes, buildDir) {
     console.log('Reading coverage file: ' + file)
     fs.readFile(file, (err, rawData) => {
 
