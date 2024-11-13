@@ -8,16 +8,24 @@ async function generateReport() {
         const coverageFileFilter = core.getInput('filter')
 
         const globber = await glob.create(coverageFileFilter, {followSymbolicLinks: false})
-        const files = await globber.glob()
-        for (const file of files) {
-            console.log('JSON file found: ' + file)
-            fs.readFile(file, function(err, data) {
+        const coverageFiles = await globber.glob()
+        for (const coverageFile of coverageFiles) {
+            console.log('JSON file found: ' + coverageFile)
+            fs.readFile(coverageFile, function(err, rawData) {
+
                 if (err) throw err;
-                const coverage = JSON.parse(data);
+
+                const coverage = JSON.parse(rawData);
+
                 console.log('Data count: ' + coverage.data.length)
                 console.log('Lines  : ' + coverage.data[0].totals.lines.count)
                 console.log('Covered: ' + coverage.data[0].totals.lines.covered)
                 console.log('%      : ' + coverage.data[0].totals.lines.percent)
+
+                for (const file of coverage.data[0].files) {
+                    console.log('File: ' + file.filename)
+                }
+
             });
         }
 
