@@ -22,7 +22,11 @@ async function generateReport() {
                 console.log('Covered: ' + coverage.data[0].totals.lines.covered)
                 console.log('%      : ' + coverage.data[0].totals.lines.percent)
 
-                for (const file of coverage.data[0].files) {
+                const projectFiles = coverage.data[0].files.filter(function (file) {
+                  return file.filename.indexOf('.build') == -1;
+                })
+
+                for (const file of projectFiles) {
                     console.log('File: ' + file.filename)
                 }
 
