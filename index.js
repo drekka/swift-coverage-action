@@ -36,16 +36,20 @@ async function generateReport() {
     }
 }
 
-function buildFilterGlobs(input) {
+function buildFilterGlobs(input, buildDir) {
     return core.getInput(input).split(',').map(glob => path.join(buildDir, glob.trim()))
 }
 
+// Processes a single coverage file.
 function processCoverage(file, includes, excludes, buildDir) {
+
     console.log('Reading coverage file: ' + file)
+
     fs.readFile(file, (err, rawData) => {
 
         if (err) throw err;
 
+        // Parse the raw coverage JSON into a data structure.
         const coverage = JSON.parse(rawData);
 
         console.log('Data count: ' + coverage.data.length)
@@ -53,17 +57,19 @@ function processCoverage(file, includes, excludes, buildDir) {
         console.log('Covered: ' + coverage.data[0].totals.lines.covered)
         console.log('%      : ' + coverage.data[0].totals.lines.percent)
 
+        // Reject files in the build dir as they'll be dependencies.
         var projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
 
-        for (const glob in includes) {
-            var mm = new Minimatch(glob, {})
-            projectFiles = projectFiles.filter(file => mm.match(file))
-        }
+        // Include only the files we want.
+        const matchers = includes.map(glob => new Minimatch(glob, {}))
+        projectFiles = projectFiles.filter(file => matchers.some(matcher => matcher.matches(file)))
 
+        // Filter out any excludes.
         for (const glob in excludes) {
 
         }
 
+        // Build the report.
         for (const file of projectFiles) {
             console.log('File: ' + file.filename)
         }
