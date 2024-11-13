@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 const glob = require('@actions/glob')
+const fs = require("fs")
 
 async function generateReport() {
     try {
@@ -10,6 +11,11 @@ async function generateReport() {
         const files = await globber.glob()
         for (const file of files) {
             console.log('JSON file found: ' + file)
+            fs.readFile(file, function(err, data) {
+                if (err) throw err;
+                const coverage = JSON.parse(data);
+                console.log('Summary: ' + coverage.summary)
+            });
         }
 
         core.summary.addHeading('Code coverage', '1')
