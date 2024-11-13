@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const glob = require('@actions/glob')
 const fs = require("node:fs")
-const minimatch = require("node:minimatch")
+const minimatch = require("minimatch")
 
 async function generateReport() {
     try {
