@@ -4,7 +4,7 @@ const glob = require('@actions/glob')
 const fs = require("node:fs")
 const path = require('node:path');
 
-const Minimatch = require('minimatch').Minimatch
+var Minimatch = require('minimatch').Minimatch
 
 async function generateReport() {
     try {
