@@ -79,7 +79,7 @@ function processCoverage(file, includes, excludes, buildDir) {
     });
 }
 
-func matchFilters(files, globs) {
+function matchFilters(files, globs) {
     const matchers = globs.map(glob => new Minimatch(glob, {}))
     return files.filter(file => matchers.some(matcher => matcher.matches(file)))}
 }
