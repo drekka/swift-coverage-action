@@ -1,13 +1,18 @@
 const core = require('@actions/core')
 const glob = require('@actions/glob')
-const fs = require("fs")
+const fs = require("node:fs")
+const minimatch = require("node:minimatch")
 
 async function generateReport() {
     try {
 
-        const coverageFileFilter = core.getInput('filter')
+        const buildDir = core.getInput('build-dir')
+        const coverageFileFilter = core.getInput('coverage-files')
+        const coverageFilter = path.join(buildDir, coverageFileFilter)
+        const includes = core.getInput('includes').split(',').map(glob => glob.trim())
+        const excludes = core.getInput('excludes').split(',').map(glob => glob.trim())
 
-        const globber = await glob.create(coverageFileFilter, {followSymbolicLinks: false})
+        const globber = await glob.create(coverageFilter, {followSymbolicLinks: false})
         const coverageFiles = await globber.glob()
         for (const coverageFile of coverageFiles) {
             console.log('JSON file found: ' + coverageFile)
@@ -22,9 +27,7 @@ async function generateReport() {
                 console.log('Covered: ' + coverage.data[0].totals.lines.covered)
                 console.log('%      : ' + coverage.data[0].totals.lines.percent)
 
-                const projectFiles = coverage.data[0].files.filter(function (file) {
-                  return file.filename.indexOf('.build') == -1;
-                })
+                const projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
 
                 for (const file of projectFiles) {
                     console.log('File: ' + file.filename)

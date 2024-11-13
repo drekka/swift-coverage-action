@@ -1,10 +1,22 @@
 name: 'Swift coverage report'
-description: 'Gathers coverage data from a swift build and pubishes a report.'
+description: 'Gathers coverage data from a swift build and publishes a report.'
 inputs:
-  filter:
-    description: 'Glob based file filter to locate coverage files.'
+  build-dir:
+    description: 'Location of the build directory.'
+    required: false
+    default: '.build'
+  coverage-files:
+    description: 'Glob based file filter used to locate coverage files. This is added to the build-dir to locate the JSON coverage files.'
+    required: false
+    default: '**/codecov/*.json'
+  includes:
+    description: "A comma delimited list of Globs which select the files whose coverage is reported on. Defaults to 'Sources/**` filter to locate coverage files."
     required: false
     default: '.build/**/codecov/*.json'
+  excludes:
+    description: "A comma delimited list of Globs which filter the list files prduced by the includes."
+    required: false
+    default: ''
 runs:
   using: 'node20'
   main: 'index.js'
