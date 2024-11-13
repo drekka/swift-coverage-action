@@ -9,8 +9,15 @@ async function generateReport() {
         const buildDir = core.getInput('build-dir')
         const coverageFileFilter = core.getInput('coverage-files')
         const coverageFilter = path.join(buildDir, coverageFileFilter)
-        const includes = core.getInput('includes').split(',').map(glob => glob.trim())
-        const excludes = core.getInput('excludes').split(',').map(glob => glob.trim())
+
+        const includes = core.getInput('includes').split(',').map(glob => path.join(buildDir, glob.trim()))
+        for (const glob of includes) {
+            console.log('Including: ' + glob)
+        }
+        const excludes = core.getInput('excludes').split(',').map(glob => path.join(buildDir, glob.trim()))
+        for (const glob of includes) {
+            console.log('Excluding: ' + glob)
+        }
 
         const globber = await glob.create(coverageFilter, {followSymbolicLinks: false})
         const coverageFiles = await globber.glob()

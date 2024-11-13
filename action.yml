@@ -12,7 +12,7 @@ inputs:
   includes:
     description: "A comma delimited list of Globs which select the files whose coverage is reported on. Defaults to 'Sources/**` filter to locate coverage files."
     required: false
-    default: '.build/**/codecov/*.json'
+    default: 'Sources/**'
   excludes:
     description: "A comma delimited list of Globs which filter the list files prduced by the includes."
     required: false
