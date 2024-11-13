@@ -10,6 +10,8 @@ async function generateReport() {
         const coverageFileFilter = core.getInput('coverage-files')
         const coverageFilter = path.join(buildDir, coverageFileFilter)
 
+        console.log('Loading coverage from: ' + coverageFilter)
+
         const includes = core.getInput('includes').split(',').map(glob => path.join(buildDir, glob.trim()))
         for (const glob of includes) {
             console.log('Including: ' + glob)
