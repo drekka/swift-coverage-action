@@ -4,7 +4,7 @@ const glob = require('@actions/glob')
 const fs = require("node:fs")
 const path = require('node:path');
 
-var Minimatch = require('minimatch').Minimatch
+const micromatch = require('micromatch')
 
 async function generateReport() {
     try {
@@ -64,7 +64,9 @@ function processCoverage(file, includes, excludes, buildDir) {
         var projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
 
         // Include only the files we want.
-        projectFiles = matchFilters(projectFiles, includes)
+        if (includes.length) > 0 {
+            projectFiles = micromatch(projectFiles, includes)
+        }
 
         // Filter out any excludes.
         for (const glob in excludes) {
@@ -77,11 +79,6 @@ function processCoverage(file, includes, excludes, buildDir) {
         }
 
     });
-}
-
-function matchFilters(files, globs) {
-    const matchers = globs.map(glob => new Minimatch(glob, {}))
-    return files.filter(file => matchers.some(matcher => matcher.match(file)))
 }
 
 generateReport()
