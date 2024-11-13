@@ -55,12 +55,12 @@ function processCoverage(file, includes, excludes) {
 
         var projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
 
-        for glob in includes) {
+        for (const glob in includes) {
             var mm = new Minimatch(glob, {})
             projectFiles = projectFiles.filter(file => mm.match(file))
         }
 
-        for glob in excludes) {
+        for (const glob in excludes) {
 
         }
 
