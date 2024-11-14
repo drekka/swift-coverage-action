@@ -37,9 +37,8 @@ async function generateReport() {
 // Reads a filter from the input arguments and generates a list of globs.
 function buildFilterGlobs(logTitle, input, buildDir) {
     return core.getInput(input).split(',').map(glob => {
-        const fullGlob = path.join(buildDir, glob.trim())
-        console.log(logTitle + ': ' + fullGlob)
-        return fullGlob
+        console.log(logTitle + ': ' + glob)
+        return glob
     })
 }
 
