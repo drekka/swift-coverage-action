@@ -20,7 +20,7 @@ class CoverageChecker {
     constructor() {
         console.log('Project directory: ' + this.#projectDir)
         const coverageFileFilter = core.getInput('coverage-files', { required: true })
-        this.#coverageFileSource = path.join(buildDir, coverageFileFilter)
+        this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
         this.#includes = this.#readFilterGlobs('Reporting on files matching', 'includes')
         this.#excludes = this.#readFilterGlobs('Excluding files matching', 'excludes')
     }
