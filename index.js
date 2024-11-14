@@ -88,11 +88,10 @@ class CoverageChecker {
     // Generates the coverage report.
     #report(coverageData, success) {
 
-        const summary = core.summary
-        summary.addHeading('Coverage report', '1')
+        core.summary.addHeading('Coverage report', '1')
 
         if (success) {
-            summary.addRaw('<p>Coverage is above ' + this.#minCoverage + '%.</p>', true).write()
+            core.summary.addRaw('<p>Coverage is above ' + this.#minCoverage + '%.</p>', true).write()
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
             }
@@ -100,7 +99,7 @@ class CoverageChecker {
         }
 
         this.#reportSources(coverageData)
-        summary.write()
+        core.summary.write()
 
         core.setFailed(`Coverage below ` + this.#minCoverage + '%');
     }
@@ -120,8 +119,8 @@ class CoverageChecker {
             tableData.push([{data : coverage.filename.slice(projectDirIndex) }, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
         })
 
-        summary.addRaw('<p>Coverage is expected to be > ' + this.#minCoverage + '%. The following files are below the minimum.</p>', true)
-        summary.addTable(tableData)
+        core.summary.addRaw('<p>Coverage is expected to be > ' + this.#minCoverage + '%. The following files are below the minimum.</p>', true)
+        core.summary.addTable(tableData)
     }
 
     // Returns a list of glob filtered coverage data.
