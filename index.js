@@ -16,13 +16,17 @@ async function generateReport() {
 
         console.log('Loading coverage from: ' + coverageFilter)
 
-        const includes = readFilterGlobs('Reporting on files matching', 'includes', buildDir)
-        const excludes = readFilterGlobs('Excluding files matching', 'excludes', buildDir)
+        const includes =
+        readFilterGlobs('Reporting on files matching', 'includes', buildDir)
+        const excludes =
+        readFilterGlobs('Excluding files matching', 'excludes', buildDir)
 
-        const globber = await glob.create(coverageFilter, {followSymbolicLinks: false})
+        const globber =
+        await glob.create(coverageFilter, {followSymbolicLinks : false})
         const coverageFiles = await globber.glob()
         for (const coverageFile of coverageFiles) {
-            processCoverage(coverageFile, includes, excludes, buildDir, minCoverage)
+            processCoverage(coverageFile, includes, excludes, buildDir,
+                            minCoverage)
         }
 
     } catch (error) {
@@ -83,24 +87,24 @@ function report(failedCoverage, success) {
     summary.addHeading('Coverage report', '1')
 
     if (success) {
-        summary.addRaw('Coverage is above ' + minCoverage + '%.', true)
-        summary.write()
+        summary.addRaw('Coverage is above ' + minCoverage + '%.', true).write()
         return
     }
+
     // Failed coverage.
     const tableData = [
-        {data: 'File', header: true},
-        {data: 'LOC', header: true},
-        {data: 'Coverage', header: true}
+        {data : 'File', header : true},
+        {data : 'LOC', header : true},
+        {data : 'Coverage', header : true}
     ]
 
     failedCoverage.forEach(coverage => {
         const lines = coverage.summary.lines
-        tableData.push({data: coverage.filename})
-        tableData.push({data: lines.count})
+        tableData.push({data : coverage.filename})
+        tableData.push({data : lines.count})
         tableData.push({data: lines.percent + '%'})
     })
-    summary.addTable(tableData)
+    summary.addTable([tableData])
     summary.write()
 
     core.setFailed(`Coverage below ` + minCoverage + '%');
