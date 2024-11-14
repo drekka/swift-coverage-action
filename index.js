@@ -9,7 +9,9 @@ const micromatch = require('micromatch')
 async function generateReport() {
     try {
 
-        console.log('Process data: ' + JSON.stringify(process.env))
+        // We need the workspace directory so we can slice it off the file paths.
+        const projectDir = process.env["GITHUB_WORKSPACE"]
+        console.log('Project directory: ' + projectDir)
 
         const buildDir = core.getInput('build-dir')
         const coverageFileFilter = core.getInput('coverage-files')
@@ -27,8 +29,7 @@ async function generateReport() {
         await glob.create(coverageFilter, {followSymbolicLinks : false})
         const coverageFiles = await globber.glob()
         for (const coverageFile of coverageFiles) {
-            processCoverage(coverageFile, includes, excludes, buildDir,
-                            minCoverage)
+            processCoverage(coverageFile, includes, excludes, buildDir, minCoverage, projectDir)
         }
 
     } catch (error) {
@@ -48,7 +49,7 @@ function readFilterGlobs(logTitle, input, buildDir) {
 }
 
 // Processes a single coverage file.
-function processCoverage(file, includes, excludes, buildDir, minCoverage) {
+function processCoverage(file, includes, excludes, buildDir, minCoverage, projectDir) {
 
     console.log('Reading coverage file: ' + file)
 
@@ -69,21 +70,22 @@ function processCoverage(file, includes, excludes, buildDir, minCoverage) {
         // Build the report.
         console.log('Coverage on ' + coverageData.length + ' files being processed…')
         var failedCoverage = []
+        let projectDirIndex = projectDir.length
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
-            console.log('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent.toFixed(2) + '%')
+            console.log('File: ' + coverage.filename.slice(projectDirIndex) + ', lines: ' + lines.count + ', coverage: ' + lines.percent.toFixed(2) + '%')
             if (lines.percent < minCoverage) {
                 failedCoverage.push(coverage)
             }
         })
 
         // Generate the coverage report.
-        report(failedCoverage, failedCoverage.length == 0, minCoverage)
+        report(failedCoverage, failedCoverage.length == 0, minCoverage, projectDir)
     });
 }
 
 // Generates the coverage report.
-function report(coverageData, success, minCoverage) {
+function report(coverageData, success, minCoverage, projectDir) {
 
     const summary = core.summary
     summary.addHeading('Coverage report', '1')
