@@ -92,7 +92,7 @@ class CoverageChecker {
         summary.addHeading('Coverage report', '1')
 
         if (success) {
-            summary.addRaw('Coverage is above ' + this.#minCoverage + '%.', true).write()
+            summary.addRaw('<p>Coverage is above ' + this.#minCoverage + '%.</p>', true).write()
             return
         }
 
@@ -108,6 +108,8 @@ class CoverageChecker {
             const lines = coverage.summary.lines
             tableData.push([{data : coverage.filename.slice(projectDirIndex) }, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
         })
+
+        summary.addRaw('<p>Coverage is expected to be > ' + this.#minCoverage + '%. The following files are below the minimum.</p>', true)
         summary.addTable(tableData)
         summary.write()
 
