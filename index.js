@@ -9,6 +9,8 @@ const micromatch = require('micromatch')
 async function generateReport() {
     try {
 
+        console..log('Process data: ' + process.env)
+
         const buildDir = core.getInput('build-dir')
         const coverageFileFilter = core.getInput('coverage-files')
         const coverageFilter = path.join(buildDir, coverageFileFilter)
