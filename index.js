@@ -72,20 +72,39 @@ function processCoverage(file, includes, excludes, buildDir, minCoverage) {
         })
 
         // Generate the coverage report.
-        const summary = core.summary
-        summary.addHeading('Coverage report', '1')
-        if (failedCoverage.length == 0) {
-            summary.addRaw('Coverage is above ' + minCoverage + '%.', true)
-            summary.write()
-        } else {
-            failedCoverage.forEach(coverage => {
-                const lines = coverage.summary.lines
-                summary.addRaw('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent + '%', true)
-            })
-            summary.write()
-            core.setFailed(`Coverage below ` + minCoverage + '%');
-        }
+        report(failedCoverage, failedCoverage.length == 0)
     });
+}
+
+// Generates the coverage report.
+function report(failedCoverage, success) {
+
+    const summary = core.summary
+    summary.addHeading('Coverage report', '1')
+
+    if (success) {
+        summary.addRaw('Coverage is above ' + minCoverage + '%.', true)
+        summary.write()
+        return
+    }
+    // Failed coverage.
+    const tableData = [
+        {data: 'File', header: true},
+        {data: 'LOC', header: true},
+        {data: 'Coverage', header: true}
+    ]
+
+    failedCoverage.forEach(coverage => {
+        const lines = coverage.summary.lines
+        tableData.push({data: coverage.filename})
+        tableData.push({data: lines.count})
+        tableData.push({data: lines.percent + '%'})
+    })
+    summary.addTable(tableData)
+    summary.write()
+
+    core.setFailed(`Coverage below ` + minCoverage + '%');
+    core.error(`Coverage below ` + minCoverage + '%')
 }
 
 // Returns a list of glob filtered coverage data.
