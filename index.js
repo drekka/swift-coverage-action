@@ -66,8 +66,8 @@ class CoverageChecker {
             var coverageData = coverage.data[0].files.filter(fileCoverage => fileCoverage.filename.indexOf(this.#buildDir) == -1)
 
             // Filter the coverage data using the specified Globs.
-            coverageData = filter(coverageData, this.#includes)
-            coverageData = filter(coverageData, this.#excludes, true)
+            coverageData = this.#filter(coverageData, this.#includes)
+            coverageData = this.#filter(coverageData, this.#excludes, true)
 
             // Build the report.
             console.log('Coverage on ' + coverageData.length + ' files being processed…')
@@ -81,7 +81,7 @@ class CoverageChecker {
             })
 
             // Generate the coverage report.
-            report(failedCoverage, failedCoverage.length == 0)
+            this.#report(failedCoverage, failedCoverage.length == 0)
         });
     }
 
