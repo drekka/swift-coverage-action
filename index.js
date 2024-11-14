@@ -92,23 +92,20 @@ function report(coverageData, success, minCoverage) {
     }
 
     // Failed coverage.
-    const tableData = [
+    const tableData = [[
         {data : 'File', header : true},
         {data : 'LOC', header : true},
         {data : 'Coverage', header : true}
-    ]
+    ]]
 
     coverageData.forEach(coverage => {
         const lines = coverage.summary.lines
-        tableData.push({data : coverage.filename})
-        tableData.push({data : lines.count})
-        tableData.push({data: lines.percent + '%'})
+        tableData.push([{data : coverage.filename}, {data : lines.count}, {data: lines.percent + '%'}])
     })
-    summary.addTable([tableData])
+    summary.addTable(tableData)
     summary.write()
 
     core.setFailed(`Coverage below ` + minCoverage + '%');
-    core.error(`Coverage below ` + minCoverage + '%')
 }
 
 // Returns a list of glob filtered coverage data.
