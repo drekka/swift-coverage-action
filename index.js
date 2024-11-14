@@ -70,10 +70,9 @@ function processCoverage(file, includes, excludes, buildDir, minCoverage, projec
         // Build the report.
         console.log('Coverage on ' + coverageData.length + ' files being processed…')
         var failedCoverage = []
-        let projectDirIndex = projectDir.length
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
-            console.log('File: ' + coverage.filename.slice(projectDirIndex) + ', lines: ' + lines.count + ', coverage: ' + lines.percent.toFixed(2) + '%')
+            console.log('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent.toFixed(2) + '%')
             if (lines.percent < minCoverage) {
                 failedCoverage.push(coverage)
             }
@@ -102,9 +101,10 @@ function report(coverageData, success, minCoverage, projectDir) {
         {data : 'Coverage', header : true}
     ]]
 
+    let projectDirIndex = projectDir.length
     coverageData.forEach(coverage => {
         const lines = coverage.summary.lines
-        tableData.push([{data : coverage.filename}, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
+        tableData.push([{data : coverage.filename.slice(projectDirIndex) }, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
     })
     summary.addTable(tableData)
     summary.write()
