@@ -5,6 +5,7 @@ const fs = require("node:fs")
 const path = require('node:path')
 
 const micromatch = require('micromatch')
+const style = require('ansi-styles')
 
 class CoverageChecker {
 
@@ -95,9 +96,11 @@ class CoverageChecker {
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
             }
+            core.summary.write()
             return
         }
 
+        core.summary.addRaw('<p>Coverage is expected to be > ' + this.#minCoverage + '%. One or more files are below that.</p>', true)
         this.#reportSources(coverageData)
         core.summary.write()
 
@@ -116,10 +119,13 @@ class CoverageChecker {
         let projectDirIndex = this.#projectDir.length
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
-            tableData.push([{data : coverage.filename.slice(projectDirIndex) }, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
+            var lineStyle = ''
+            if (lines.percent < this.#minCoverage) {
+                lineStyle = style.color.red
+            }
+            tableData.push([{data : lineStyle + coverage.filename.slice(projectDirIndex) }, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
         })
 
-        core.summary.addRaw('<p>Coverage is expected to be > ' + this.#minCoverage + '%. The following files are below the minimum.</p>', true)
         core.summary.addTable(tableData)
     }
 
