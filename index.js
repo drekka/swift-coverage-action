@@ -51,7 +51,7 @@ class CoverageChecker {
     }
 
     // Processes a single coverage file.
-    #function #processCoverage(file) {
+    function #processCoverage(file) {
 
         console.log('Reading coverage file: ' + file)
 
