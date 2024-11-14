@@ -18,7 +18,7 @@ class CoverageChecker {
     #excludes
 
     constructor() {
-        console.log('Project directory: ' + #projectDir)
+        console.log('Project directory: ' + this.#projectDir)
         const coverageFileFilter = core.getInput('coverage-files', { required: true })
         this.#coverageFileSource = path.join(buildDir, coverageFileFilter)
         this.#includes = this.#readFilterGlobs('Reporting on files matching', 'includes')
@@ -27,7 +27,7 @@ class CoverageChecker {
 
     async function generateReport() {
         try {
-            console.log('Loading coverage from: ' + #coverageFileSource)
+            console.log('Loading coverage from: ' + this.#coverageFileSource)
             const globber = await glob.create(this.#coverageFileSource, {followSymbolicLinks : false})
             const coverageFiles = await globber.glob()
             for (const coverageFile of coverageFiles) {
