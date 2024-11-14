@@ -83,7 +83,7 @@ function processCoverage(file, includes, excludes, buildDir, minCoverage) {
                 summary.addRaw('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent + '%', true)
             })
             summary.write()
-            throw new Error('Coverage failed!');
+            core.setFailed(`Coverage below ` + minCoverage + '%');
         }
     });
 }
