@@ -2,7 +2,7 @@ const core = require('@actions/core')
 const glob = require('@actions/glob')
 
 const fs = require("node:fs")
-const path = require('node:path');
+const path = require('node:path')
 
 const micromatch = require('micromatch')
 
