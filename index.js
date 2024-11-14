@@ -5,7 +5,8 @@ const fs = require("node:fs")
 const path = require('node:path')
 
 const micromatch = require('micromatch')
-const style = require('yoctocolors')
+
+import style from 'yoctocolors'
 
 class CoverageChecker {
 
