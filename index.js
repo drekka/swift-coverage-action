@@ -9,7 +9,7 @@ const micromatch = require('micromatch')
 async function generateReport() {
     try {
 
-        console..log('Process data: ' + process.env)
+        console.log('Process data: ' + process.env)
 
         const buildDir = core.getInput('build-dir')
         const coverageFileFilter = core.getInput('coverage-files')
@@ -71,7 +71,7 @@ function processCoverage(file, includes, excludes, buildDir, minCoverage) {
         var failedCoverage = []
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
-            console.log('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent + '%')
+            console.log('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent.toFixed(2) + '%')
             if (lines.percent < minCoverage) {
                 failedCoverage.push(coverage)
             }
@@ -102,7 +102,7 @@ function report(coverageData, success, minCoverage) {
 
     coverageData.forEach(coverage => {
         const lines = coverage.summary.lines
-        tableData.push([{data : coverage.filename}, {data : lines.count}, {data: lines.percent + '%'}])
+        tableData.push([{data : coverage.filename}, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
     })
     summary.addTable(tableData)
     summary.write()
