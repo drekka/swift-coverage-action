@@ -25,7 +25,7 @@ class CoverageChecker {
         this.#excludes = this.#readFilterGlobs('Excluding files matching', 'excludes')
     }
 
-    function generateReport() {
+    async generateReport() {
         try {
             console.log('Loading coverage from: ' + this.#coverageFileSource)
             const globber = await glob.create(this.#coverageFileSource, {followSymbolicLinks : false})
@@ -41,7 +41,7 @@ class CoverageChecker {
     }
 
     // Reads a filter from the input arguments and generates a list of globs.
-    function #readFilterGlobs(logTitle, input) {
+    #readFilterGlobs(logTitle, input) {
         return core.getInput(input).split(',')
         .filter(glob => glob.trim())
         .map(glob => {
@@ -51,7 +51,7 @@ class CoverageChecker {
     }
 
     // Processes a single coverage file.
-    function #processCoverage(file) {
+    #processCoverage(file) {
 
         console.log('Reading coverage file: ' + file)
 
@@ -86,7 +86,7 @@ class CoverageChecker {
     }
 
     // Generates the coverage report.
-    function #report(coverageData, success) {
+    #report(coverageData, success) {
 
         const summary = core.summary
         summary.addHeading('Coverage report', '1')
@@ -115,7 +115,7 @@ class CoverageChecker {
     }
 
     // Returns a list of glob filtered coverage data.
-    function #filter(coverageData, globs, invert = false) {
+    #filter(coverageData, globs, invert = false) {
 
         if (globs.length == 0) {
             return coverageData
