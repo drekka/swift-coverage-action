@@ -76,12 +76,12 @@ function processCoverage(file, includes, excludes, buildDir, minCoverage) {
         })
 
         // Generate the coverage report.
-        report(failedCoverage, failedCoverage.length == 0)
+        report(failedCoverage, failedCoverage.length == 0, minCoverage)
     });
 }
 
 // Generates the coverage report.
-function report(failedCoverage, success) {
+function report(coverageData, success, minCoverage) {
 
     const summary = core.summary
     summary.addHeading('Coverage report', '1')
@@ -98,7 +98,7 @@ function report(failedCoverage, success) {
         {data : 'Coverage', header : true}
     ]
 
-    failedCoverage.forEach(coverage => {
+    coverageData.forEach(coverage => {
         const lines = coverage.summary.lines
         tableData.push({data : coverage.filename})
         tableData.push({data : lines.count})
