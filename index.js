@@ -12,7 +12,7 @@ class CoverageChecker {
     #projectDir = process.env["GITHUB_WORKSPACE"]
     #buildDir = core.getInput('build-dir', { required: true })
     #minCoverage = core.getInput('coverage', { required: true })
-    #showAllFiles = core.getBooleanInput('show-all-files', { required: true })
+    #showAllCoverage = core.getBooleanInput('show-all-files', { required: true })
     #coverageFileSource
     #includes
     #excludes
@@ -81,7 +81,7 @@ class CoverageChecker {
             })
 
             // Generate the coverage report.
-            this.#report(failedCoverage, failedCoverage.length == 0)
+            this.#report(this.#showAllCoverage ? coverageData : failedCoverage, failedCoverage.length == 0)
         });
     }
 
@@ -93,10 +93,21 @@ class CoverageChecker {
 
         if (success) {
             summary.addRaw('<p>Coverage is above ' + this.#minCoverage + '%.</p>', true).write()
+            if (this.#showAllCoverage) {
+                this.#reportSources(coverageData)
+            }
             return
         }
 
-        // Failed coverage.
+        this.#reportSources(coverageData)
+        summary.write()
+
+        core.setFailed(`Coverage below ` + this.#minCoverage + '%');
+    }
+
+    // Adds a table of the passed coverage data to the summary.
+    #reportSources(coverageData) {
+
         const tableData = [[
             {data : 'File', header : true},
             {data : 'LOC', header : true},
@@ -111,9 +122,6 @@ class CoverageChecker {
 
         summary.addRaw('<p>Coverage is expected to be > ' + this.#minCoverage + '%. The following files are below the minimum.</p>', true)
         summary.addTable(tableData)
-        summary.write()
-
-        core.setFailed(`Coverage below ` + this.#minCoverage + '%');
     }
 
     // Returns a list of glob filtered coverage data.
