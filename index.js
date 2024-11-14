@@ -15,8 +15,8 @@ async function generateReport() {
 
         console.log('Loading coverage from: ' + coverageFilter)
 
-        const includes = buildFilterGlobs('Including', 'includes', buildDir)
-        const excludes = buildFilterGlobs('Excluding', 'excludes', buildDir)
+        const includes = readFilterGlobs('Including', 'includes', buildDir)
+        const excludes = readFilterGlobs('Excluding', 'excludes', buildDir)
 
         const globber = await glob.create(coverageFilter, {followSymbolicLinks: false})
         const coverageFiles = await globber.glob()
@@ -35,8 +35,10 @@ async function generateReport() {
 }
 
 // Reads a filter from the input arguments and generates a list of globs.
-function buildFilterGlobs(logTitle, input, buildDir) {
-    return core.getInput(input).split(',').map(glob => {
+function readFilterGlobs(logTitle, input, buildDir) {
+    return core.getInput(input).split(',')
+    .filter(glob => glob.trim())
+    .map(glob => {
         console.log(logTitle + ': ' + glob)
         return glob
     })
