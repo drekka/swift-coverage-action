@@ -1,6 +1,10 @@
 name: 'Swift coverage report'
 description: 'Gathers coverage data from a swift build and publishes a report.'
 inputs:
+  coverage:
+    description: 'Minimum expected coverage percentage. Defaults to 80.'
+    required: false
+    default: 80
   build-dir:
     description: 'Location of the build directory.'
     required: false

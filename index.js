@@ -60,12 +60,13 @@ function processCoverage(file, includes, excludes, buildDir) {
         console.log('Covered: ' + coverage.data[0].totals.lines.covered)
         console.log('%      : ' + coverage.data[0].totals.lines.percent)
 
-        // Reject files in the build dir as they'll be dependencies.
+        // Reject all files in the build dir as they'll be dependencies.
         var projectFiles = coverage.data[0].files.filter(file => file.filename.indexOf(buildDir) == -1)
 
         // Include only the files we want.
         if (includes.length > 0) {
-            projectFiles = micromatch(projectFiles, includes)
+            const matcher = micromatch.matcher(includes)
+            projectFiles = projectFiles.filter(fileCoverage => matcher(fileCoverage.filename))
         }
 
         // Filter out any excludes.
