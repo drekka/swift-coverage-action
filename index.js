@@ -74,7 +74,7 @@ function processCoverage(file, includes, excludes, buildDir, minCoverage) {
 }
 
 // Returns a list of glob filtered coverage data.
-function filterFiles(coverageData, globs, invert = false) {
+function filter(coverageData, globs, invert = false) {
 
     if (globs.length == 0) {
         return coverageData
