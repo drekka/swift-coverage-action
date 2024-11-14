@@ -15,8 +15,8 @@ async function generateReport() {
 
         console.log('Loading coverage from: ' + coverageFilter)
 
-        const includes = readFilterGlobs('Including', 'includes', buildDir)
-        const excludes = readFilterGlobs('Excluding', 'excludes', buildDir)
+        const includes = readFilterGlobs('Reporting on files matching', 'includes', buildDir)
+        const excludes = readFilterGlobs('Excluding files matching', 'excludes', buildDir)
 
         const globber = await glob.create(coverageFilter, {followSymbolicLinks: false})
         const coverageFiles = await globber.glob()
@@ -78,7 +78,7 @@ function processCoverage(file, includes, excludes, buildDir) {
         // Build the report.
         console.log('Coverage on ' + projectFiles.length + ' being processed.')
         for (const file of projectFiles) {
-            console.log('File: ' + file.filename)
+            console.log('File: ' + file.filename + ', lines: ' + file.summary.lines.count + ', coverage: ' + file.summary.lines.percent + '%')
         }
 
     });
