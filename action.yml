@@ -5,6 +5,10 @@ inputs:
     description: 'Minimum expected coverage percentage. Defaults to 80.'
     required: false
     default: 80
+  show-all-files:
+    description: 'List all sources files in the coverage list.'
+    required: false
+    default: false
   build-dir:
     description: 'Location of the build directory.'
     required: false
