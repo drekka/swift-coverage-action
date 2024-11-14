@@ -25,10 +25,6 @@ async function generateReport() {
             processCoverage(coverageFile, includes, excludes, buildDir, minCoverage)
         }
 
-        core.summary.addHeading('Code coverage', '1')
-        core.summary.addRaw('Code coverage results', true)
-        core.summary.write()
-
     } catch (error) {
         // Handle errors and indicate failure
         core.setFailed(error.message);
@@ -66,10 +62,29 @@ function processCoverage(file, includes, excludes, buildDir, minCoverage) {
 
         // Build the report.
         console.log('Coverage on ' + coverageData.length + ' files being processed…')
-        for (const coverage of coverageData) {
-            console.log('File: ' + coverage.filename + ', lines: ' + coverage.summary.lines.count + ', coverage: ' + coverage.summary.lines.percent + '%')
-        }
+        var failedCoverage = []
+        coverageData.forEach(coverage => {
+            const lines = coverage.summary.lines
+            console.log('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent + '%')
+            if (lines.percent < minCoverage) {
+                failedCoverage.push(coverage)
+            }
+        })
 
+        // Generate the coverage report.
+        const summary = core.summary
+        summary.addHeading('Coverage report', '1')
+        if (failedCoverage.length == 0) {
+            summary.addRaw('Coverage is above ' + minCoverage + '%.', true)
+            summary.write()
+        } else {
+            failedCoverage.forEach(coverage => {
+                const lines = coverage.summary.lines
+                summary.addRaw('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent + '%', true)
+            })
+            summary.write()
+            throw new Error('Coverage failed!');
+        }
     });
 }
 
