@@ -128,4 +128,4 @@ class CoverageChecker {
 }
 
 
-CoverageChecker().generateReport()
+new CoverageChecker().generateReport()
