@@ -75,6 +75,7 @@ function processCoverage(file, includes, excludes, buildDir) {
         }
 
         // Build the report.
+        console.log('Coverage on ' + projectFiles.length + ' being processed.')
         for (const file of projectFiles) {
             console.log('File: ' + file.filename)
         }
