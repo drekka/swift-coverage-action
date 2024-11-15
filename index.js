@@ -127,12 +127,12 @@ class CoverageChecker {
             }
 
             // If the coverage is the same then sort by name.
-            cost leftName = left.filename
-            cost righttName = right.filename
-            if (leftName < righttName) {
+            const leftName = left.filename
+            const rightName = right.filename
+            if (leftName < rightName) {
                 return -1
             }
-            if (leftName > righttName) {
+            if (leftName > rightName) {
                 return 1
             }
             return 0
