@@ -18,7 +18,7 @@ class CoverageChecker {
     #excludes
 
     constructor() {
-        console.log(`Project environment: ${process.env.stringify()}`)
+        console.log(`Project environment: ${process.env.stringify}`)
         console.log(`Project directory: ${this.#projectDir}`)
         const coverageFileFilter = core.getInput('coverage-files', { required: true })
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
@@ -127,6 +127,7 @@ class CoverageChecker {
             ])
             if (failedCoverage) {
                 core.error(`Failed coverage, expected > ${this.#minCoverage}%, got ${lines.percent.toFixed(2)}%`, {
+                    title: 'Coverage',
                     file: coverage.filename.slice(projectDirIndex + 1),
                     startLine: 1,
                     startColumn: 1
