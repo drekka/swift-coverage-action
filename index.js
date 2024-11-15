@@ -117,7 +117,9 @@ class CoverageChecker {
         ]]
 
         let projectDirIndex = this.#projectDir.length
-        coverageData.forEach(coverage => {
+        coverageData
+        .toSort((left, right) => left.summary.percent - right.summary.percent)
+        .forEach(coverage => {
             const lines = coverage.summary.lines
             const failedCoverage = lines.percent < this.#minCoverage
             tableData.push([
@@ -125,14 +127,6 @@ class CoverageChecker {
                 {data : lines.count},
                 {data: this.#highlightIf(failedCoverage, true, `${lines.percent.toFixed(2)}%`)}
             ])
-            if (failedCoverage) {
-                core.error(`Failed coverage, expected > ${this.#minCoverage}%, got ${lines.percent.toFixed(2)}%`, {
-                    title: 'Coverage',
-                    file: coverage.filename.slice(projectDirIndex + 1),
-                    startLine: 1,
-                    startColumn: 1
-                })
-            }
         })
 
         core.summary.addTable(tableData)
