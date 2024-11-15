@@ -122,7 +122,7 @@ class CoverageChecker {
             tableData.push([
                 {data : this.#highlightIf(failedCoverage, false, coverage.filename.slice(projectDirIndex)) },
                 {data : lines.count},
-                {data: this.#failedCoverage(FailedCoverage, true, `${lines.percent.toFixed(2)}%`)}
+                {data: this.#highlightIf(FailedCoverage, true, `${lines.percent.toFixed(2)}%`)}
             ])
             if (failedCoverage) {
                 core.error(`${coverage.filename.slice(projectDirIndex)} failed coverage`, {
