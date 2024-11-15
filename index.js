@@ -126,7 +126,7 @@ class CoverageChecker {
     }
 
     #redIf(highlighted, text) {
-        return highlighted ? `<div style="color:red;">${text}</div>` : text
+        return highlighted ? `<mark>${text}</mark>` : text
     }
 
     // Returns a list of glob filtered coverage data.
