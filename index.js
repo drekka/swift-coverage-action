@@ -126,7 +126,7 @@ class CoverageChecker {
             ])
             if (failedCoverage) {
                 core.error(`${coverage.filename.slice(projectDirIndex)} failed coverage`, {
-                    file: coverage.filename
+                    file: coverage.filename.slice(projectDirIndex)
                 })
             }
         })
