@@ -118,15 +118,24 @@ class CoverageChecker {
         let projectDirIndex = this.#projectDir.length
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
-            const highlighted = lines.percent < this.#minCoverage
-            tableData.push([{data : this.#highlight(highlighted, coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: this.#highlight(highlighted, `${lines.percent.toFixed(2)}%`)}])
+            const failedCoverage = lines.percent < this.#minCoverage
+            tableData.push([
+                {data : this.#highlightIf(failedCoverage, false, coverage.filename.slice(projectDirIndex)) },
+                {data : lines.count},
+                {data: this.#failedCoverage(FailedCoverage, true, `${lines.percent.toFixed(2)}%`)}
+            ])
+            if (failedCoverage) {
+                core.error(`${coverage.filename.slice(projectDirIndex)} failed coverage`, {
+                    file: coverage.filename
+                })
+            }
         })
 
         core.summary.addTable(tableData)
     }
 
-    #highlight(highlighted, text) {
-        return highlighted ? `<b><i>${text} ‼️</i></b>` : text
+    #highlightIf(highlighted, alert, text) {
+        return highlighted ? `<b><i>${text}${alert ? ' ‼️' : ''}</i></b>` : text
     }
 
     // Returns a list of glob filtered coverage data.
