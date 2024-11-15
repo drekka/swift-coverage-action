@@ -126,8 +126,9 @@ class CoverageChecker {
             ])
             if (failedCoverage) {
                 core.error(`Failed coverage, expected > ${this.#minCoverage}%, got ${lines.percent.toFixed(2)}%`, {
-                    title: `File ${coverage.filename.slice(projectDirIndex)}`,
-                    file: coverage.filename.slice(projectDirIndex)
+                    file: coverage.filename.slice(projectDirIndex + 1),
+                    startLine: 1,
+                    startColumn: 1
                 })
             }
         })
