@@ -123,7 +123,7 @@ class CoverageChecker {
             if (lines.percent < this.#minCoverage) {
                 lineStyle = style.color.red
             }
-            tableData.push([{data : style.red(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
+            tableData.push([{data : style.colors.red(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
         })
 
         core.summary.addTable(tableData)
