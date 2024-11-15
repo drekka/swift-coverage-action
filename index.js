@@ -125,8 +125,9 @@ class CoverageChecker {
                 {data: this.#highlightIf(failedCoverage, true, `${lines.percent.toFixed(2)}%`)}
             ])
             if (failedCoverage) {
-                core.error(`${coverage.filename.slice(projectDirIndex)} failed coverage`, {
-                    file: coverage.filename
+                core.error(`Failed coverage, expected > ${this.#minCoverage}%, got ${lines.percent.toFixed(2)}%`, {
+                    title: `File ${coverage.filename.slice(projectDirIndex)}`,
+                    file: coverage.filename.slice(projectDirIndex)
                 })
             }
         })
