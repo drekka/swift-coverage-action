@@ -118,7 +118,7 @@ class CoverageChecker {
 
         let projectDirIndex = this.#projectDir.length
         coverageData
-        .toSort((left, right) => left.summary.percent - right.summary.percent)
+        .toSorted((left, right) => left.summary.percent - right.summary.percent)
         .forEach(coverage => {
             const lines = coverage.summary.lines
             const failedCoverage = lines.percent < this.#minCoverage
