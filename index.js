@@ -18,6 +18,7 @@ class CoverageChecker {
     #excludes
 
     constructor() {
+        console.log(`Project environment: ${process.env.stringify()}`)
         console.log(`Project directory: ${this.#projectDir}`)
         const coverageFileFilter = core.getInput('coverage-files', { required: true })
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
