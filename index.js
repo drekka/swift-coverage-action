@@ -120,10 +120,12 @@ class CoverageChecker {
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
             var lineStyle = ''
+            let lineStyle = lines.percent < this.#minCoverage ? style.red : text => text
             if (lines.percent < this.#minCoverage) {
-                lineStyle = style.color.red
+                tableData.push([{data : lineStyle(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: `${lines.percent.toFixed(2)}%`}])
+            } else {
+                tableData.push([{data : lineStyle(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: `${lines.percent.toFixed(2)}%`}])
             }
-            tableData.push([{data : style.red(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: `${lines.percent.toFixed(2)}%`}])
         })
 
         core.summary.addTable(tableData)
