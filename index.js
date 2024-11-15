@@ -119,8 +119,7 @@ class CoverageChecker {
         let projectDirIndex = this.#projectDir.length
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
-            var lineStyle = ''
-            let lineStyle = lines.percent < this.#minCoverage ? style.red : text => text
+            const lineStyle = lines.percent < this.#minCoverage ? style.red : text => text
             if (lines.percent < this.#minCoverage) {
                 tableData.push([{data : lineStyle(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: `${lines.percent.toFixed(2)}%`}])
             } else {
