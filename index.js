@@ -19,7 +19,7 @@ class CoverageChecker {
     #excludes
 
     constructor() {
-        console.log('Project directory: ' + this.#projectDir)
+        console.log('Project directory: ${this.#projectDir}')
         const coverageFileFilter = core.getInput('coverage-files', { required: true })
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
         this.#includes = this.#readFilterGlobs('Reporting on files matching', 'includes')
@@ -28,7 +28,7 @@ class CoverageChecker {
 
     async generateReport() {
         try {
-            console.log('Loading coverage from: ' + this.#coverageFileSource)
+            console.log('Loading coverage from: ${this.#coverageFileSource}')
             const globber = await glob.create(this.#coverageFileSource, {followSymbolicLinks : false})
             const coverageFiles = await globber.glob()
             for (const coverageFile of coverageFiles) {
@@ -46,7 +46,7 @@ class CoverageChecker {
         return core.getInput(input).split(',')
         .filter(glob => glob.trim())
         .map(glob => {
-            console.log(logTitle + ': ' + glob)
+            console.log('${logTitle}: ${glob}')
             return glob
         })
     }
@@ -54,7 +54,7 @@ class CoverageChecker {
     // Processes a single coverage file.
     #processCoverage(file) {
 
-        console.log('Reading coverage file: ' + file)
+        console.log('Reading coverage file: ${file}')
 
         fs.readFile(file, (err, rawData) => {
 
@@ -71,11 +71,11 @@ class CoverageChecker {
             coverageData = this.#filter(coverageData, this.#excludes, true)
 
             // Build the report.
-            console.log('Coverage on ' + coverageData.length + ' files being processed…')
+            console.log('Coverage on ${coverageData.length} files being processed…')
             var failedCoverage = []
             coverageData.forEach(coverage => {
                 const lines = coverage.summary.lines
-                console.log('File: ' + coverage.filename + ', lines: ' + lines.count + ', coverage: ' + lines.percent.toFixed(2) + '%')
+                console.log('File: ${coverage.filename}, lines: ${lines.count}, coverage: ${lines.percent.toFixed(2)}%')
                 if (lines.percent < this.#minCoverage) {
                     failedCoverage.push(coverage)
                 }
@@ -92,7 +92,7 @@ class CoverageChecker {
         core.summary.addHeading('Coverage report', '1')
 
         if (success) {
-            core.summary.addRaw('<p>Coverage is above ' + this.#minCoverage + '%.</p>', true).write()
+            core.summary.addRaw('<p>Coverage is above ${this.#minCoverage}%.</p>', true).write()
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
             }
@@ -100,11 +100,11 @@ class CoverageChecker {
             return
         }
 
-        core.summary.addRaw('<p>Coverage is expected to be > ' + this.#minCoverage + '%. One or more files are below that.</p>', true)
+        core.summary.addRaw('<p>Coverage is expected to be > ${this.#minCoverage}%. One or more files are below that.</p>', true)
         this.#reportSources(coverageData)
         core.summary.write()
 
-        core.setFailed(`Coverage below ` + this.#minCoverage + '%');
+        core.setFailed('Coverage below ${this.#minCoverage}%');
     }
 
     // Adds a table of the passed coverage data to the summary.
@@ -123,7 +123,7 @@ class CoverageChecker {
             if (lines.percent < this.#minCoverage) {
                 lineStyle = style.color.red
             }
-            tableData.push([{data : style.colors.red(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: lines.percent.toFixed(2) + '%'}])
+            tableData.push([{data : style.colors.red(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: '${lines.percent.toFixed(2)}%'}])
         })
 
         core.summary.addTable(tableData)
