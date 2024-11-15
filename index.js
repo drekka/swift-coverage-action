@@ -119,14 +119,14 @@ class CoverageChecker {
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
             const highlighted = lines.percent < this.#minCoverage
-            tableData.push([{data : this.#redIf(highlighted, coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: `${lines.percent.toFixed(2)}%`}])
+            tableData.push([{data : this.#highlight(highlighted, coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: this.#highlight(highlighted, `${lines.percent.toFixed(2)}%`)}])
         })
 
         core.summary.addTable(tableData)
     }
 
-    #redIf(highlighted, text) {
-        return highlighted ? `<mark>${text}</mark>` : text
+    #highlight(highlighted, text) {
+        return highlighted ? `<b><i>${text} ‼️</i></b>` : text
     }
 
     // Returns a list of glob filtered coverage data.
