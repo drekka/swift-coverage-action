@@ -118,7 +118,25 @@ class CoverageChecker {
 
         let projectDirIndex = this.#projectDir.length
         coverageData
-        .toSorted((left, right) => left.summary.lines.percent - right.summary.lines.percent)
+        .toSorted((left, right) => {
+
+            // First sort by coverage
+            const order = left.summary.lines.percent - right.summary.lines.percent
+            if (order != 0) {
+                return order
+            }
+
+            // If the coverage is the same then sort by name.
+            cost leftName = left.filename
+            cost righttName = right.filename
+            if (leftName < righttName) {
+                return -1
+            }
+            if (leftName > righttName) {
+                return 1
+            }
+            return 0
+        })
         .forEach(coverage => {
             const lines = coverage.summary.lines
             const failedCoverage = lines.percent < this.#minCoverage
