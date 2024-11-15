@@ -5,7 +5,6 @@ const fs = require("node:fs")
 const path = require('node:path')
 
 const micromatch = require('micromatch')
-const style = require('yoctocolors-cjs')
 
 class CoverageChecker {
 
@@ -119,15 +118,15 @@ class CoverageChecker {
         let projectDirIndex = this.#projectDir.length
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
-            const lineStyle = lines.percent < this.#minCoverage ? style.red : text => text
-            if (lines.percent < this.#minCoverage) {
-                tableData.push([{data : lineStyle(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: `${lines.percent.toFixed(2)}%`}])
-            } else {
-                tableData.push([{data : lineStyle(coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: `${lines.percent.toFixed(2)}%`}])
-            }
+            const highlighted = lines.percent < this.#minCoverage
+            tableData.push([{data : redIf(highlighted, coverage.filename.slice(projectDirIndex)) }, {data : lines.count}, {data: `${lines.percent.toFixed(2)}%`}])
         })
 
         core.summary.addTable(tableData)
+    }
+
+    #redIf(highlighted, text) {
+        return highlighted ? `<div style="color:red;">${text}</div>` : text
     }
 
     // Returns a list of glob filtered coverage data.
