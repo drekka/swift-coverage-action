@@ -137,11 +137,7 @@ class CoverageChecker {
     // coerage is the same.
     #sortCoverageByPct(left, right) {
         const order = left.summary.lines.percent - right.summary.lines.percent
-        if (order == 0) {
-            return this.#sortCoverageByName(left, right)
-        } else {
-            return order
-        }
+        return order == 0 ? this.#sortCoverageByName(left, right) : order
     }
 
     // Sorts two coverage entries by filename.
@@ -177,4 +173,4 @@ class CoverageChecker {
 }
 
 
-new CoverageChecker().generateReport()
+await new CoverageChecker().generateReport()
