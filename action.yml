@@ -9,6 +9,10 @@ inputs:
     description: 'List all sources files in the coverage list.'
     required: false
     default: false
+  sort-by-name:
+    description: 'Sort the coverage by name.'
+    required: false
+    default: false
   build-dir:
     description: 'Location of the build directory.'
     required: false
