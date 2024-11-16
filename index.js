@@ -119,7 +119,7 @@ class CoverageChecker {
 
         let projectDirIndex = this.#projectDir.length
         coverageData
-        .toSorted(this.#sortByName ? this.#sortCoverageByName : this.#sortCoveragebyPct)
+        .toSorted(this.#sortByName ? this.#sortCoverageByName : this.#sortCoverageByPct)
         .forEach(coverage => {
             const lines = coverage.summary.lines
             const failedCoverage = lines.percent < this.#minCoverage
@@ -148,7 +148,7 @@ class CoverageChecker {
 
     // Sorts two coverage entries by their coverage, defauling to name if the
     // coerage is the same.
-    #sortCoveragebyPct(left, right) {
+    #sortCoverageByPct(left, right) {
         const order = left.summary.lines.percent - right.summary.lines.percent
         return order == 0 ? this.#sortCoverageByName(left, right) : order
     }
