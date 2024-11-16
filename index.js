@@ -10,9 +10,10 @@ class CoverageChecker {
 
     // We need the workspace directory so we can slice it off the file paths.
     #projectDir = process.env["GITHUB_WORKSPACE"]
-    #buildDir = core.getInput('build-dir', { required: true })
-    #minCoverage = core.getInput('coverage', { required: true })
-    #showAllCoverage = core.getBooleanInput('show-all-files', { required: true })
+    #buildDir = core.getInput('build-dir')
+    #minCoverage = core.getInput('coverage')
+    #showAllCoverage = core.getBooleanInput('show-all-files')
+    #sortByName = core.getBooleanInput('sort-by-name')
     #coverageFileSource
     #includes
     #excludes
@@ -20,7 +21,7 @@ class CoverageChecker {
     constructor() {
         console.log(`Project environment: ${process.env.stringify}`)
         console.log(`Project directory: ${this.#projectDir}`)
-        const coverageFileFilter = core.getInput('coverage-files', { required: true })
+        const coverageFileFilter = core.getInput('coverage-files')
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
         this.#includes = this.#readFilterGlobs('Reporting on files matching', 'includes')
         this.#excludes = this.#readFilterGlobs('Excluding files matching', 'excludes')
@@ -118,25 +119,7 @@ class CoverageChecker {
 
         let projectDirIndex = this.#projectDir.length
         coverageData
-        .toSorted((left, right) => {
-
-            // First sort by coverage
-            const order = left.summary.lines.percent - right.summary.lines.percent
-            if (order != 0) {
-                return order
-            }
-
-            // If the coverage is the same then sort by name.
-            const leftName = left.filename
-            const rightName = right.filename
-            if (leftName < rightName) {
-                return -1
-            }
-            if (leftName > rightName) {
-                return 1
-            }
-            return 0
-        })
+        .toSorted(this.#sortByName ? this.#sortCoverageByName : this.@sortCoveragebyPct)
         .forEach(coverage => {
             const lines = coverage.summary.lines
             const failedCoverage = lines.percent < this.#minCoverage
@@ -150,8 +133,31 @@ class CoverageChecker {
         core.summary.addTable(tableData)
     }
 
+    #sortCoverageByName(left, right) {
+        return left.summary.lines.percent - right.summary.lines.percent
+    }
+
+    #sortCoveragebyPct(left, right) {
+        // First sort by coverage
+        const order = left.summary.lines.percent - right.summary.lines.percent
+        if (order != 0) {
+            return order
+        }
+
+        // If the coverage is the same then sort by name.
+        const leftName = left.filename
+        const rightName = right.filename
+        if (leftName < rightName) {
+            return -1
+        }
+        if (leftName > rightName) {
+            return 1
+        }
+        return 0
+    }
+
     #highlightIf(highlighted, alert, text) {
-        return highlighted ? `<b><i>${text}${alert ? ' ‼️' : ''}</i></b>` : text
+        return this.#showAllCoverage && highlighted ? `<b><i>${text}${alert ? ' ‼️' : ''}</i></b>` : text
     }
 
     // Returns a list of glob filtered coverage data.
