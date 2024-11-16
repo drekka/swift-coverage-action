@@ -133,6 +133,13 @@ class CoverageChecker {
         core.summary.addTable(tableData)
     }
 
+    // Sorts two coverage entries by their coverage, defauling to name if the
+    // coerage is the same.
+    #sortCoverageByPct(left, right) {
+        const order = left.summary.lines.percent - right.summary.lines.percent
+        return order == 0 ? this.#sortCoverageByName(left, right) : order
+    }
+
     // Sorts two coverage entries by filename.
     #sortCoverageByName(left, right) {
         const leftName = left.filename
@@ -144,13 +151,6 @@ class CoverageChecker {
             return 1
         }
         return 0
-    }
-
-    // Sorts two coverage entries by their coverage, defauling to name if the
-    // coerage is the same.
-    #sortCoverageByPct(left, right) {
-        const order = left.summary.lines.percent - right.summary.lines.percent
-        return order == 0 ? this.#sortCoverageByName(left, right) : order
     }
 
     // Wraps a piece of text in HTML tags to highlight it if requested.
