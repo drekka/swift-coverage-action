@@ -45,4 +45,4 @@ Available arguments. All of these are optional and listed here with their defaul
     # When filtering the files to report on, 
     # includes are processed first, then excludes.
     includes: 
-    ```
+```
