@@ -40,6 +40,7 @@ class CoverageChecker {
             // Handle errors and indicate failure
             core.setFailed(error.message);
         }
+        console.log('Coverage processing done.')
     }
 
     // Reads a filter from the input arguments and generates a list of globs.
@@ -172,5 +173,4 @@ class CoverageChecker {
 
 }
 
-
-await new CoverageChecker().generateReport()
+ new CoverageChecker().generateReport()
