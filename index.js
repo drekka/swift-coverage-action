@@ -19,7 +19,7 @@ class CoverageChecker {
     #excludes
 
     constructor() {
-        console.log(`Project environment: ${process.env.stringify}`)
+        //console.log(`Project environment: ${process.env.stringify}`)
         console.log(`Project directory: ${this.#projectDir}`)
         const coverageFileFilter = core.getInput('coverage-files')
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
@@ -133,18 +133,8 @@ class CoverageChecker {
         core.summary.addTable(tableData)
     }
 
+    // Sorts two coverage entries by filename.
     #sortCoverageByName(left, right) {
-        return left.summary.lines.percent - right.summary.lines.percent
-    }
-
-    #sortCoveragebyPct(left, right) {
-        // First sort by coverage
-        const order = left.summary.lines.percent - right.summary.lines.percent
-        if (order != 0) {
-            return order
-        }
-
-        // If the coverage is the same then sort by name.
         const leftName = left.filename
         const rightName = right.filename
         if (leftName < rightName) {
@@ -156,6 +146,15 @@ class CoverageChecker {
         return 0
     }
 
+    // Sorts two coverage entries by their coverage, defauling to name if the
+    // coerage is the same.
+    #sortCoveragebyPct(left, right) {
+        const order = left.summary.lines.percent - right.summary.lines.percent
+        return order == 0 ? this.#sortByName(left, right) : order
+    }
+
+    // Wraps a piece of text in HTML tags to highlight it if requested.
+    // But only if we are showing all the files.
     #highlightIf(highlighted, alert, text) {
         return this.#showAllCoverage && highlighted ? `<b><i>${text}${alert ? ' ‼️' : ''}</i></b>` : text
     }
