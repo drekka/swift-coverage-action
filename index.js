@@ -33,7 +33,7 @@ class CoverageChecker {
             const globber = await glob.create(this.#coverageFileSource, {followSymbolicLinks : false})
             const coverageFiles = await globber.glob()
             for (const coverageFile of coverageFiles) {
-                this.#processCoverage(coverageFile)
+                await this.#processCoverage(coverageFile)
             }
 
         } catch (error) {
