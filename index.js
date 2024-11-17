@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const glob = require('@actions/glob')
 
-const fs = require("node:fs")
+const fs = require("node:fs/promises")
 const path = require('node:path')
 
 const micromatch = require('micromatch')
@@ -58,34 +58,31 @@ class CoverageChecker {
 
         console.log(`Reading coverage file: ${file}`)
 
-        fs.readFile(file, (err, rawData) => {
+        const rawData = await fs.readFile(file)
 
-            if (err) throw err;
+        // Parse the raw coverage JSON into a data structure.
+        const coverage = JSON.parse(rawData);
 
-            // Parse the raw coverage JSON into a data structure.
-            const coverage = JSON.parse(rawData);
+        // Read the file coverage summaries, rejecting files from the build dir as they'll be dependencies.
+        var coverageData = coverage.data[0].files.filter(fileCoverage => fileCoverage.filename.indexOf(this.#buildDir) == -1)
 
-            // Read the file coverage summaries, rejecting files from the build dir as they'll be dependencies.
-            var coverageData = coverage.data[0].files.filter(fileCoverage => fileCoverage.filename.indexOf(this.#buildDir) == -1)
+        // Filter the coverage data using the specified Globs.
+        coverageData = this.#filter(coverageData, this.#includes)
+        coverageData = this.#filter(coverageData, this.#excludes, true)
 
-            // Filter the coverage data using the specified Globs.
-            coverageData = this.#filter(coverageData, this.#includes)
-            coverageData = this.#filter(coverageData, this.#excludes, true)
+        // Build the report.
+        console.log(`Coverage on ${coverageData.length} files being processed…`)
+        var failedCoverage = []
+        coverageData.forEach(coverage => {
+            const lines = coverage.summary.lines
+            console.log(`File: ${coverage.filename}, lines: ${lines.count}, coverage: ${lines.percent.toFixed(2)}%`)
+            if (lines.percent < this.#minCoverage) {
+                failedCoverage.push(coverage)
+            }
+        })
 
-            // Build the report.
-            console.log(`Coverage on ${coverageData.length} files being processed…`)
-            var failedCoverage = []
-            coverageData.forEach(coverage => {
-                const lines = coverage.summary.lines
-                console.log(`File: ${coverage.filename}, lines: ${lines.count}, coverage: ${lines.percent.toFixed(2)}%`)
-                if (lines.percent < this.#minCoverage) {
-                    failedCoverage.push(coverage)
-                }
-            })
-
-            // Generate the coverage report.
-            this.#report(this.#showAllCoverage ? coverageData : failedCoverage, failedCoverage.length == 0)
-        });
+        // Generate the coverage report.
+        this.#report(this.#showAllCoverage ? coverageData : failedCoverage, failedCoverage.length == 0)
     }
 
     // Generates the coverage report.
@@ -173,4 +170,4 @@ class CoverageChecker {
 
 }
 
- new CoverageChecker().generateReport()
+new CoverageChecker().generateReport()
