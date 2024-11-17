@@ -1,5 +1,8 @@
 name: 'Swift coverage'
 description: 'Gathers coverage data from a swift build and publishes a report.'
+branding:
+  icon: 'award'
+  color: 'green'
 inputs:
   coverage:
     description: 'Minimum expected coverage percentage. Defaults to 80.'
