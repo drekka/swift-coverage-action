@@ -135,7 +135,7 @@ class CoverageChecker {
     // coerage is the same.
     #sortCoverageByPct(left, right) {
         const order = left.summary.lines.percent - right.summary.lines.percent
-        console.log(`Sorting for ${self}`)
+        console.log(`Sorting for ${this}`)
         return order == 0 ? this.#sortCoverageByName(left, right) : order
     }
 
