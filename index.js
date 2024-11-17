@@ -71,7 +71,8 @@ class CoverageChecker {
         coverageData = this.#filter(coverageData, this.#excludes, true)
 
         // Build the report.
-        console.log(`Coverage on ${coverageData.length} files being processed…`)
+
+        corestartGroup(`Coverage on ${coverageData.length} files being processed…`)
         var failedCoverage = []
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
@@ -80,6 +81,7 @@ class CoverageChecker {
                 failedCoverage.push(coverage)
             }
         })
+        core.endGroup()
 
         // Generate the coverage report.
         this.#report(this.#showAllCoverage ? coverageData : failedCoverage, failedCoverage.length == 0)
