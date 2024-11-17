@@ -1,7 +1,7 @@
 name: 'Swift coverage'
 description: 'Gathers coverage data from a swift build and publishes a report.'
 branding:
-  icon: 'award'
+  icon: 'shield'
   color: 'green'
 inputs:
   coverage:
