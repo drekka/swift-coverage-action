@@ -117,6 +117,11 @@ class CoverageChecker {
             {data : 'Coverage', header : true}
         ]]
 
+        const githubServer = process.env["GITHUB_SERVER_URL"]
+        const githubRepo = process.env["GITHUB_REPOSITORY"]
+        const githubRef = process.env["GITHUB_REF_NAME"]
+        const githubBaseURL = `${githubServer}/${githubRepo}/blob/${githubRef}`
+
         let projectDirIndex = this.#projectDir.length
         coverageData
         .toSorted((left, right) => {
@@ -125,10 +130,12 @@ class CoverageChecker {
         .forEach(coverage => {
             const lines = coverage.summary.lines
             const failedCoverage = lines.percent < this.#minCoverage
+            const filename = coverage.filename.slice(projectDirIndex)
+            const percentage = `${lines.percent.toFixed(2)}%`
             tableData.push([
-                {data : this.#highlightIf(failedCoverage, false, coverage.filename.slice(projectDirIndex)) },
+                {data : `<a href="${githubBaseURL}${filename}">${filename}</a>` },
                 {data : lines.count},
-                {data: this.#highlightIf(failedCoverage, true, `${lines.percent.toFixed(2)}%`)}
+                {data: this.#showAllCoverage && failedCoverage ? `<b><i>${percentage} ‼️</i></b>` : percentage }
             ])
         })
 
@@ -153,12 +160,6 @@ class CoverageChecker {
             return 1
         }
         return 0
-    }
-
-    // Wraps a piece of text in HTML tags to highlight it if requested.
-    // But only if we are showing all the files.
-    #highlightIf(highlighted, alert, text) {
-        return this.#showAllCoverage && highlighted ? `<b><i>${text}${alert ? ' ‼️' : ''}</i></b>` : text
     }
 
     // Returns a list of glob filtered coverage data.
