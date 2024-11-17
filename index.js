@@ -115,11 +115,11 @@ class CoverageChecker {
             {data : 'Coverage', header : true}
         ]]
 
-        console.log(`reporting on ${this}`)
         let projectDirIndex = this.#projectDir.length
         coverageData
-        .toSorted(this.#sortByName ? this.#sortCoverageByName : this.#sortCoverageByPct)
-        .bind(this)
+        .toSorted((left, right) => {
+            return this.#sortByName ? this.#sortCoverageByName(left, right) : this.#sortCoverageByPct(left, right)
+        })
         .forEach(coverage => {
             const lines = coverage.summary.lines
             const failedCoverage = lines.percent < this.#minCoverage
