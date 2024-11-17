@@ -120,7 +120,7 @@ class CoverageChecker {
 
         let projectDirIndex = this.#projectDir.length
         coverageData
-        .toSorted(this.#sortByName ? this.#sortCoverageByName : this.#sortCoverageByPct)
+        //.toSorted(this.#sortByName ? this.#sortCoverageByName : this.#sortCoverageByPct)
         .forEach(coverage => {
             const lines = coverage.summary.lines
             const failedCoverage = lines.percent < this.#minCoverage
