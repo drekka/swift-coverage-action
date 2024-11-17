@@ -72,7 +72,7 @@ class CoverageChecker {
 
         // Build the report.
 
-        corestartGroup(`Coverage on ${coverageData.length} files being processed…`)
+        core.startGroup(`Coverage on ${coverageData.length} files being processed…`)
         var failedCoverage = []
         coverageData.forEach(coverage => {
             const lines = coverage.summary.lines
