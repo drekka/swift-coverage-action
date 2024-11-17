@@ -27,7 +27,7 @@ class CoverageChecker {
         this.#excludes = this.#readFilterGlobs('Excluding files matching', 'excludes')
     }
 
-    generateReport() {
+    async generateReport() {
         try {
             console.log(`Loading coverage from: ${this.#coverageFileSource}`)
             const globber = await glob.create(this.#coverageFileSource, {followSymbolicLinks : false})
