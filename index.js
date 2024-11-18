@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const glob = require('@actions/glob')
 const io = require('@actions/io')
-const artifact = require('@actions/artifact')
+const {DefaultArtifactClient} = require('@actions/artifact')
 
 const fs = require("node:fs/promises")
 const path = require('node:path')
