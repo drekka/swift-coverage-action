@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 const glob = require('@actions/glob')
+const io = require('@actions/io')
 
 const fs = require("node:fs/promises")
 const path = require('node:path')
@@ -14,16 +15,13 @@ class CoverageChecker {
     #minCoverage = core.getInput('coverage')
     #showAllCoverage = core.getBooleanInput('show-all-files')
     #sortByName = core.getBooleanInput('sort-by-name')
-    #debug = core.getBooleanInput('debug')
     #coverageFileSource
     #includes
     #excludes
 
     constructor() {
-        if (this.#debug) {
-            console.log(`Project environment: ${JSON.stringify(process.env)}`)
-        }
-        console.log(`Project directory: ${this.#projectDir}`)
+        core.debug(`Project environment: ${JSON.stringify(process.env)}`)
+        core.debug(`Project directory: ${this.#projectDir}`)
         const coverageFileFilter = core.getInput('coverage-files')
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
         this.#includes = this.#readFilterGlobs('Reporting on files matching', 'includes')
@@ -32,12 +30,16 @@ class CoverageChecker {
 
     async generateReport() {
         try {
+
             console.log(`Loading coverage from: ${this.#coverageFileSource}`)
+
             const globber = await glob.create(this.#coverageFileSource, {followSymbolicLinks : false})
             const coverageFiles = await globber.glob()
             for (const coverageFile of coverageFiles) {
                 await this.#processCoverage(coverageFile)
             }
+
+            await this.#writeFileReport()
 
         } catch (error) {
             // Handle errors and indicate failure
@@ -145,6 +147,17 @@ class CoverageChecker {
 
         core.summary.addTable(tableData)
     }
+
+    async #writeFileReport() {
+
+        const coverageReportDir = `${this.#projectDir}/${this.buildDir}/coverage`
+        console.log(`Creating coverage report folder: ${coverageReportDir}`)
+        await io.mkdirP(coverageReportDir)
+
+        console.log(`Writing report files`)
+        await fs.writeFile(`html><body> Hello world</body>/</html>`)
+    }
+
 
     // Sorts two coverage entries by their coverage, defauling to name if the
     // coerage is the same.

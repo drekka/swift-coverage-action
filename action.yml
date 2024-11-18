@@ -32,10 +32,6 @@ inputs:
     description: "A comma delimited list of Globs which filter the list files prduced by the includes."
     required: false
     default: ''
-  debug:
-    description: 'Internal use'
-    required: false
-    default: false
 runs:
   using: 'node20'
   main: 'index.js'
