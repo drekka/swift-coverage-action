@@ -158,10 +158,11 @@ class CoverageChecker {
         await io.mkdirP(coverageReportDir)
 
         console.log(`Writing report files`)
-        await fs.writeFile(coverageReportDir + '/index.html', `html><body> Hello world</body>/</html>`)
+        await fs.writeFile(coverageReportDir + '/index.html', `<html><body>Hello world</body></html>`)
+        await fs.writeFile(coverageReportDir + '/index2.html', `<html><body>Hello world 2</body></html>`)
         const artifact = new DefaultArtifactClient()
         console.log(`Uploading report artifacts`)
-        await artifact.uploadArtifact('Coverage report', [coverageReportDir + '/index.html'], coverageReportDir, {})
+        await artifact.uploadArtifact('Coverage report', ['index.html', 'index2.html'], coverageReportDir, {})
     }
 
 
