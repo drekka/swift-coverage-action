@@ -20,7 +20,10 @@ class CoverageChecker {
     #excludes
 
     constructor() {
-        core.debug(`Project environment: ${JSON.stringify(process.env)}`)
+        if (core.isDebug) {
+            // Using console.log because core.debug appears to have a character limit.
+            console.log(`Project environment: ${JSON.stringify(process.env)}`)
+        }
         core.debug(`Project directory: ${this.#projectDir}`)
         const coverageFileFilter = core.getInput('coverage-files')
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
@@ -150,12 +153,12 @@ class CoverageChecker {
 
     async #writeFileReport() {
 
-        const coverageReportDir = `${this.#projectDir}/${this.buildDir}/coverage`
+        const coverageReportDir = `${this.#projectDir}/${this.#buildDir}/reports/coverage`
         console.log(`Creating coverage report folder: ${coverageReportDir}`)
         await io.mkdirP(coverageReportDir)
 
         console.log(`Writing report files`)
-        await fs.writeFile(`html><body> Hello world</body>/</html>`)
+        await fs.writeFile(coverageReportDir, `html><body> Hello world</body>/</html>`)
     }
 
 
