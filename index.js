@@ -108,7 +108,6 @@ class CoverageChecker {
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
             }
-            core.summary.write()
             return
         }
 
@@ -162,7 +161,7 @@ class CoverageChecker {
         await fs.writeFile(coverageReportDir + '/index.html', `html><body> Hello world</body>/</html>`)
         const artifact = new DefaultArtifactClient()
         console.log(`Uploading report artifacts`)
-        await artifact.uploadArtifact('Coverage report', [coverageReportDir + '/index.html'], '.', {})
+        await artifact.uploadArtifact('Coverage report', [coverageReportDir + '/index.html'], coverageReportDir, {})
     }
 
 
