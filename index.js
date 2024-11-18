@@ -14,12 +14,15 @@ class CoverageChecker {
     #minCoverage = core.getInput('coverage')
     #showAllCoverage = core.getBooleanInput('show-all-files')
     #sortByName = core.getBooleanInput('sort-by-name')
+    #debug = core.getBooleanInput('debug')
     #coverageFileSource
     #includes
     #excludes
 
     constructor() {
-        console.log(`Project environment: ${JSON.stringify(process.env)}`)
+        if (this.#debug) {
+            console.log(`Project environment: ${JSON.stringify(process.env)}`)
+        }
         console.log(`Project directory: ${this.#projectDir}`)
         const coverageFileFilter = core.getInput('coverage-files')
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
@@ -89,6 +92,8 @@ class CoverageChecker {
 
     // Generates the coverage report.
     #report(coverageData, success) {
+
+        console.log('Generating report…')
 
         core.summary.addHeading('Coverage report', '1')
 
