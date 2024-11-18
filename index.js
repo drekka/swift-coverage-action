@@ -108,7 +108,7 @@ class CoverageChecker {
 
         core.summary.addRaw(`<p>Coverage is expected to be > ${this.#minCoverage}%. One or more files are below that.</p>`, true)
         this.#reportSources(coverageData)
-        core.summary.write()
+        //core.summary.write()
 
         core.setFailed(`Coverage below ${this.#minCoverage}%`);
     }
