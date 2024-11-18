@@ -162,9 +162,11 @@ class CoverageChecker {
         await fs.writeFile(coverageReportDir + '/index2.html', `<html><body>Hello world 2</body></html>`)
         const artifact = new DefaultArtifactClient()
         console.log(`Uploading report artifacts`)
-        await artifact.uploadArtifact('Coverage report', ['index.html', 'index2.html'], coverageReportDir, {})
+        await artifact.uploadArtifact('Coverage report',
+                                      ['index.html', 'index2.html'].map(file => `${coverageReportDir}/${file}`),
+                                      coverageReportDir,
+                                      {})
     }
-
 
     // Sorts two coverage entries by their coverage, defauling to name if the
     // coerage is the same.
