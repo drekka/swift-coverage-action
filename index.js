@@ -158,7 +158,7 @@ class CoverageChecker {
         await io.mkdirP(coverageReportDir)
 
         console.log(`Writing report files`)
-        await fs.writeFile(coverageReportDir, `html><body> Hello world</body>/</html>`)
+        await fs.writeFile(coverageReportDir + '/index.html', `html><body> Hello world</body>/</html>`)
     }
 
 
