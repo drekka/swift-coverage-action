@@ -1,6 +1,7 @@
 const core = require('@actions/core')
 const glob = require('@actions/glob')
 const io = require('@actions/io')
+const artifact = require('@actions/artifact')
 
 const fs = require("node:fs/promises")
 const path = require('node:path')
@@ -153,12 +154,14 @@ class CoverageChecker {
 
     async #writeFileReport() {
 
-        const coverageReportDir = `${this.#projectDir}/${this.#buildDir}/reports/coverage`
+        const coverageReportDir = `${this.#buildDir}/reports/coverage`
         console.log(`Creating coverage report folder: ${coverageReportDir}`)
         await io.mkdirP(coverageReportDir)
 
         console.log(`Writing report files`)
         await fs.writeFile(coverageReportDir + '/index.html', `html><body> Hello world</body>/</html>`)
+        const artifact = new DefaultArtifactClient()
+        await artifact.uploadArtifact('Coverage report', [coverageReportDir + '/index.html'])
     }
 
 
