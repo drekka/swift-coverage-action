@@ -161,7 +161,8 @@ class CoverageChecker {
         console.log(`Writing report files`)
         await fs.writeFile(coverageReportDir + '/index.html', `html><body> Hello world</body>/</html>`)
         const artifact = new DefaultArtifactClient()
-        await artifact.uploadArtifact('Coverage report', [coverageReportDir + '/index.html'])
+        console.log(`Uploading report artifacts`)
+        await artifact.uploadArtifact('Coverage report', [coverageReportDir + '/index.html'], '.', {})
     }
 
 
