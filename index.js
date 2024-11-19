@@ -144,7 +144,7 @@ class CoverageChecker {
             ])
         })
 
-        console.log('Writing coverage table')
+        console.log(`Writing coverage table for ${coverageData.count} files`)
         core.summary.addTable(tableData)
     }
 
