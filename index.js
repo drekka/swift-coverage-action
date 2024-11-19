@@ -95,11 +95,10 @@ class CoverageChecker {
     // Generates the coverage report.
     #report(coverageData, success) {
 
-        console.log('Generating report…')
-
         core.summary.addHeading('Coverage report', '1')
 
         if (success) {
+            console.log('Writing coverage success report')
             core.summary.addRaw(`<p>Coverage is above ${this.#minCoverage}%.</p>`, true).write()
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
@@ -107,6 +106,7 @@ class CoverageChecker {
             return
         }
 
+        console.log('Writing coverage failure report')
         core.summary.addRaw(`<p>Coverage is expected to be > ${this.#minCoverage}%. One or more files are below that.</p>`, true)
         this.#reportSources(coverageData)
 
@@ -144,6 +144,7 @@ class CoverageChecker {
             ])
         })
 
+        console.log('Writing coverage table')
         core.summary.addTable(tableData)
     }
 
