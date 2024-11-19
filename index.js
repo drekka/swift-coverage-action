@@ -43,7 +43,7 @@ class CoverageChecker {
                 await this.#processCoverage(coverageFile)
             }
 
-            await this.#writeFileReport()
+            //await this.#writeFileReport()
 
         } catch (error) {
             // Handle errors and indicate failure
@@ -151,22 +151,23 @@ class CoverageChecker {
         core.summary.addTable(tableData)
     }
 
-    async #writeFileReport() {
-
-        const coverageReportDir = `${this.#buildDir}/reports/coverage`
-        console.log(`Creating coverage report folder: ${coverageReportDir}`)
-        await io.mkdirP(coverageReportDir)
-
-        console.log(`Writing report files`)
-        await fs.writeFile(coverageReportDir + '/index.html', `<html><body>Hello world</body></html>`)
-        await fs.writeFile(coverageReportDir + '/index2.html', `<html><body>Hello world 2</body></html>`)
-        const artifact = new DefaultArtifactClient()
-        console.log(`Uploading report artifacts`)
-        await artifact.uploadArtifact('Coverage report',
-                                      ['index.html', 'index2.html'].map(file => `${coverageReportDir}/${file}`),
-                                      coverageReportDir,
-                                      {})
-    }
+    // Experiment which is not going to be continued at this time but which may be useful in future.
+//    async #writeFileReport() {
+//
+//        const coverageReportDir = `${this.#buildDir}/reports/coverage`
+//        console.log(`Creating coverage report folder: ${coverageReportDir}`)
+//        await io.mkdirP(coverageReportDir)
+//
+//        console.log(`Writing report files`)
+//        await fs.writeFile(coverageReportDir + '/index.html', `<html><body>Hello world</body></html>`)
+//        await fs.writeFile(coverageReportDir + '/index2.html', `<html><body>Hello world 2</body></html>`)
+//        const artifact = new DefaultArtifactClient()
+//        console.log(`Uploading report artifacts`)
+//        await artifact.uploadArtifact('Coverage report',
+//                                      ['index.html', 'index2.html'].map(file => `${coverageReportDir}/${file}`),
+//                                      coverageReportDir,
+//                                      {})
+//    }
 
     // Sorts two coverage entries by their coverage, defauling to name if the
     // coerage is the same.
