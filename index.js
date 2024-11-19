@@ -19,7 +19,7 @@ class CoverageChecker {
     #excludes
 
     constructor() {
-        if (core.isDebug) {
+        if (core.isDebug()) {
             // Using console.log because core.debug appears to have a character limit.
             console.log(`Project environment: ${JSON.stringify(process.env)}`)
         }
