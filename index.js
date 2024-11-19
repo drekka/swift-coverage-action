@@ -14,16 +14,16 @@ class CoverageChecker {
     #minCoverage = core.getInput('coverage')
     #showAllCoverage = core.getBooleanInput('show-all-files')
     #sortByName = core.getBooleanInput('sort-by-name')
-    #debug = core.getBooleanInput('debug')
     #coverageFileSource
     #includes
     #excludes
 
     constructor() {
-        if (this.#debug) {
+        if (core.isDebug) {
+            // Using console.log because core.debug appears to have a character limit.
             console.log(`Project environment: ${JSON.stringify(process.env)}`)
         }
-        console.log(`Project directory: ${this.#projectDir}`)
+        core.debug(`Project directory: ${this.#projectDir}`)
         const coverageFileFilter = core.getInput('coverage-files')
         this.#coverageFileSource = path.join(this.#buildDir, coverageFileFilter)
         this.#includes = this.#readFilterGlobs('Reporting on files matching', 'includes')
@@ -32,7 +32,9 @@ class CoverageChecker {
 
     async generateReport() {
         try {
+
             console.log(`Loading coverage from: ${this.#coverageFileSource}`)
+
             const globber = await glob.create(this.#coverageFileSource, {followSymbolicLinks : false})
             const coverageFiles = await globber.glob()
             for (const coverageFile of coverageFiles) {
@@ -102,7 +104,6 @@ class CoverageChecker {
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
             }
-            core.summary.write()
             return
         }
 
