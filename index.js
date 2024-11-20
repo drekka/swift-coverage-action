@@ -113,7 +113,7 @@ class CoverageChecker {
 //        this.#reportSources(coverageData)
 //
 //        core.setFailed(`Coverage below ${this.#minCoverage}%`);
-        core.summary.write()
+        core.summary.write({overwrite: true})
     }
 
     // Adds a table of the passed coverage data to the summary.
