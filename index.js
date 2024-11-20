@@ -112,7 +112,7 @@ class CoverageChecker {
         core.summary.addRaw(`<p>Coverage is expected to be > ${this.#minCoverage}%. One or more files are below that.</p>`, true)
         this.#reportSources(coverageData)
 
-        //core.setFailed(`Coverage below ${this.#minCoverage}%`);
+        core.setFailed(`Coverage below ${this.#minCoverage}%`);
     }
 
     // Adds a table of the passed coverage data to the summary.
