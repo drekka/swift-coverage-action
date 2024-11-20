@@ -19,7 +19,7 @@ class CoverageChecker {
     #excludes
 
     constructor() {
-        if (core.isDebug) {
+        if (core.isDebug()) {
             // Using console.log because core.debug appears to have a character limit.
             console.log(`Project environment: ${JSON.stringify(process.env)}`)
         }
@@ -90,16 +90,17 @@ class CoverageChecker {
 
         // Generate the coverage report.
         this.#report(this.#showAllCoverage ? coverageData : failedCoverage, failedCoverage.length == 0)
+        core.summary.write()
     }
 
     // Generates the coverage report.
     #report(coverageData, success) {
 
-        console.log('Generating report…')
-
         core.summary.addHeading('Coverage report', '1')
+        console.log(`Reporting success: ${success}, with ${coverageData.length} files`)
 
         if (success) {
+            console.log('Writing coverage success report')
             core.summary.addRaw(`<p>Coverage is above ${this.#minCoverage}%.</p>`, true).write()
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
@@ -107,6 +108,7 @@ class CoverageChecker {
             return
         }
 
+        console.log('Writing coverage failure report')
         core.summary.addRaw(`<p>Coverage is expected to be > ${this.#minCoverage}%. One or more files are below that.</p>`, true)
         this.#reportSources(coverageData)
 
@@ -115,6 +117,8 @@ class CoverageChecker {
 
     // Adds a table of the passed coverage data to the summary.
     #reportSources(coverageData) {
+
+        console.log(`Writing coverage table with ${coverageData.length} files`)
 
         const tableData = [[
             {data : 'File', header : true},
