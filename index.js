@@ -90,13 +90,14 @@ class CoverageChecker {
 
         // Generate the coverage report.
         this.#report(this.#showAllCoverage ? coverageData : failedCoverage, failedCoverage.length == 0)
+        core.summary.write()
     }
 
     // Generates the coverage report.
     #report(coverageData, success) {
 
         core.summary.addHeading('Coverage report', '1')
-        console.log(`Reporting success: ${success}, with ${coverageData.count} files`)
+        console.log(`Reporting success: ${success}, with ${coverageData.length} files`)
 
         if (success) {
             console.log('Writing coverage success report')
@@ -117,7 +118,7 @@ class CoverageChecker {
     // Adds a table of the passed coverage data to the summary.
     #reportSources(coverageData) {
 
-        console.log(`Writing coverage table with ${coverageData.count} files`)
+        console.log(`Writing coverage table with ${coverageData.length} files`)
 
         const tableData = [[
             {data : 'File', header : true},
