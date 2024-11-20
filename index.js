@@ -90,7 +90,6 @@ class CoverageChecker {
 
         // Generate the coverage report.
         this.#report(this.#showAllCoverage ? coverageData : failedCoverage, failedCoverage.length == 0)
-        core.summary.write()
     }
 
     // Generates the coverage report.
@@ -101,7 +100,7 @@ class CoverageChecker {
 
 //        if (success) {
             console.log('Writing coverage success report')
-            core.summary.addRaw(`<p>Coverage is above ${this.#minCoverage}%.</p>`, true).write()
+            core.summary.addRaw(`<p>Coverage is above ${this.#minCoverage}%.</p>`, true)
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
             }
@@ -113,7 +112,7 @@ class CoverageChecker {
 //        this.#reportSources(coverageData)
 //
 //        core.setFailed(`Coverage below ${this.#minCoverage}%`);
-        core.summary.write({overwrite: true})
+//        core.summary.write()
     }
 
     // Adds a table of the passed coverage data to the summary.
