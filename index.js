@@ -98,20 +98,21 @@ class CoverageChecker {
         core.summary.addHeading('Coverage report', '1')
         console.log(`Reporting success: ${success}, with ${coverageData.length} files`)
 
-//        if (success) {
+        if (success) {
             console.log('Writing coverage success report')
             core.summary.addRaw(`<p>Coverage is above ${this.#minCoverage}%.</p>`, true)
             if (this.#showAllCoverage) {
                 this.#reportSources(coverageData)
             }
-//            return
-//        }
-//
-//        console.log('Writing coverage failure report')
-//        core.summary.addRaw(`<p>Coverage is expected to be > ${this.#minCoverage}%. One or more files are below that.</p>`, true)
-//        this.#reportSources(coverageData)
-//
-//        core.setFailed(`Coverage below ${this.#minCoverage}%`);
+            core.summary.write()
+            return
+        }
+
+        console.log('Writing coverage failure report')
+        core.summary.addRaw(`<p>Coverage is expected to be > ${this.#minCoverage}%. One or more files are below that.</p>`, true)
+        this.#reportSources(coverageData)
+
+        core.setFailed(`Coverage below ${this.#minCoverage}%`);
         core.summary.write()
     }
 
