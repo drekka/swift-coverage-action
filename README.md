@@ -10,14 +10,14 @@ Minimal usage:
 
 ```yaml
 - run swift test --enable-code-coverage
-- uses: drekka/swift-coverage-action@main@v1.3
+- uses: drekka/swift-coverage-action@main@v1.4
 ```
 
 Available arguments. All of these are optional and listed here with their default values.
 
 ```yaml
 - run swift test --enable-code-coverage
-- uses: drekka/swift-coverage-action@main@v1.3
+- uses: drekka/swift-coverage-action@main@v1.4
   with:
     # The minimum percentage of coverage each source file
     # should met for the action to be successful.
